@@ -712,6 +712,12 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 				DSI_ERR("[%s] failed to send DSI_CMD_SET_10HZ_MODE cmd, rc=%d\n",
 					panel->name, rc);
 			}
+		} else if (timing->refresh_rate == 90) {
+			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_90HZ_MODE);
+			if (rc) {
+				DSI_ERR("[%s] failed to send DSI_CMD_SET_90HZ_MODE cmd, rc=%d\n",
+					panel->name, rc);
+			}
 		}
 	} else if ((bl_lvl >= 1291) && ((panel->current_bl < 1291)|| (panel->current_bl == 0))) {
 		DSI_DEBUG("DBV > 1290, set 3pulse and 4pulse %s\n", __func__);
@@ -742,6 +748,12 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_10HZ_MODE);
 			if (rc) {
 				DSI_ERR("[%s] failed to send DSI_CMD_SET_10HZ_MODE cmd, rc=%d\n",
+					panel->name, rc);
+			}
+		} else if (timing->refresh_rate == 90) {
+			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_90HZ_MODE);
+			if (rc) {
+				DSI_ERR("[%s] failed to send DSI_CMD_SET_90HZ_MODE cmd, rc=%d\n",
 					panel->name, rc);
 			}
 		}
@@ -2113,7 +2125,8 @@ const char *cmd_set_prop_map[DSI_CMD_SET_MAX] = {
 	"t2m,mdss-dsi-set-120hz-mode-command",
 	"t2m,mdss-dsi-set-60hz-mode-command",
 	"t2m,mdss-dsi-set-30hz-mode-command",
-	"t2m,mdss-dsi-set-1hz-mode-command",
+	"t2m,mdss-dsi-set-10hz-mode-command",
+	"t2m,mdss-dsi-set-90hz-mode-command",
 #endif
 };
 
@@ -2150,7 +2163,8 @@ const char *cmd_set_state_map[DSI_CMD_SET_MAX] = {
 	"t2m,mdss-dsi-set-120hz-mode-command-state",
 	"t2m,mdss-dsi-set-60hz-mode-command-state",
 	"t2m,mdss-dsi-set-30hz-mode-command-state",
-	"t2m,mdss-dsi-set-1hz-mode-command-state",
+	"t2m,mdss-dsi-set-10hz-mode-command-state",
+	"t2m,mdss-dsi-set-90hz-mode-command-state",
 #endif
 };
 
