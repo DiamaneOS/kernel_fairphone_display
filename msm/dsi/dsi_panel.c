@@ -5083,7 +5083,8 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
 	}
-
+	DSI_INFO("enter %s, %d, panel->panel_initialized=%d, panel->power_mode=%d, dsi_panel_is_type_oled(panel)=%d\n",
+		__func__, __LINE__, panel->panel_initialized, panel->power_mode, dsi_panel_is_type_oled(panel));
 	mutex_lock(&panel->panel_lock);
 	if (!panel->panel_initialized)
 		goto exit;
@@ -5099,6 +5100,7 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 		panel->power_mode != SDE_MODE_DPMS_LP2)
 		dsi_pwr_panel_regulator_mode_set(&panel->power_info,
 			"ibb", REGULATOR_MODE_IDLE);
+	DSI_INFO("set DSI_CMD_SET_LP1%s\n", __func__);
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_LP1);
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_LP1 cmd, rc=%d\n",
@@ -5138,7 +5140,7 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
 	}
-
+	DSI_INFO("enter %s\n", __func__);
 	mutex_lock(&panel->panel_lock);
 	if (!panel->panel_initialized)
 		goto exit;
@@ -5523,7 +5525,7 @@ int dsi_panel_enable(struct dsi_panel *panel)
 		DSI_ERR("Invalid params\n");
 		return -EINVAL;
 	}
-
+	DSI_INFO("enter %s, panel->panel_mode=%d\n", __func__, panel->panel_mode);
 	mutex_lock(&panel->panel_lock);
 
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_ON);
@@ -5611,7 +5613,7 @@ int dsi_panel_disable(struct dsi_panel *panel)
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
 	}
-
+	DSI_INFO("enter %s, panel->power_mode=%d\n", __func__, panel->power_mode);
 	mutex_lock(&panel->panel_lock);
 
 	/* Avoid sending panel off commands when ESD recovery is underway */
