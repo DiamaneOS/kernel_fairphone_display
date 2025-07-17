@@ -5079,6 +5079,12 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 {
 	int rc = 0;
 
+#if defined(CONFIG_ARCH_FPSPRING)
+	struct mipi_dsi_device *dsi = &panel->mipi_device;
+	if (!dsi)
+		return -EINVAL;
+#endif
+
 	if (!panel) {
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
@@ -5100,11 +5106,16 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 		panel->power_mode != SDE_MODE_DPMS_LP2)
 		dsi_pwr_panel_regulator_mode_set(&panel->power_info,
 			"ibb", REGULATOR_MODE_IDLE);
-	DSI_INFO("set DSI_CMD_SET_LP1%s\n", __func__);
+	DSI_INFO("set DSI_CMD_SET_LP1");
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_LP1);
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_LP1 cmd, rc=%d\n",
 		       panel->name, rc);
+
+#if defined(CONFIG_ARCH_FPSPRING)
+	mipi_dsi_dcs_read(dsi, MIPI_DCS_NOP, NULL, 0);
+#endif
+
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;
@@ -5136,10 +5147,17 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 {
 	int rc = 0;
 
+#if defined(CONFIG_ARCH_FPSPRING)
+	struct mipi_dsi_device *dsi = &panel->mipi_device;
+	if (!dsi)
+		return -EINVAL;
+#endif
+
 	if (!panel) {
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
 	}
+
 	DSI_INFO("enter %s\n", __func__);
 	mutex_lock(&panel->panel_lock);
 	if (!panel->panel_initialized)
@@ -5157,6 +5175,11 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 	if (rc)
 		DSI_ERR("[%s] failed to send DSI_CMD_SET_NOLP cmd, rc=%d\n",
 		       panel->name, rc);
+
+#if defined(CONFIG_ARCH_FPSPRING)
+	mipi_dsi_dcs_read(dsi, MIPI_DCS_NOP, NULL, 0);
+#endif
+
 exit:
 	mutex_unlock(&panel->panel_lock);
 	return rc;
